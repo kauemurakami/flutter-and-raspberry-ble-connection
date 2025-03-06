@@ -1,16 +1,8 @@
-# app_ble
+### Aplicativo de conexão via bluetooth com um microcontrolador Raspberry Pi Pico W
 
-A new Flutter project.
+ - Procurar por dispositivos bluetooth
+ - Se conecta ao raspberry ( a lógica criada aqui foi feita para funcionar apenas com os serviços criados no projeto [internal-temperature-with-BLE](https://github.com/kauemurakami/internal-temperature-with-BLE), mas lê o nome de qualquer device que esteja disponível).<br/>
+ Lembrando que não funciona com dispositivos que só possuem o Bluetooth Classic, mas sim com dispositivos BLE (Bluetooth Low Energy)
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Projeto em MicroPython com Raspberry Pi Pico W
+[internal-temperature-with-BLE](https://github.com/kauemurakami/internal-temperature-with-BLE)
