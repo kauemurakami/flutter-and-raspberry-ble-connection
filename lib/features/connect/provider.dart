@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
 
 class ConnectProvider extends ChangeNotifier {
   final ValueNotifier<List<ScanResult>> devices = ValueNotifier([]);
   ValueNotifier<bool> isScanning = ValueNotifier(false);
- 
 
   Future<void> startScan() async {
     isScanning.value = true;
@@ -15,21 +12,32 @@ class ConnectProvider extends ChangeNotifier {
     devices.notifyListeners();
     notifyListeners();
 
-    // FlutterBluePlus.onScanResults.listen((results) {
+    // var subscription = FlutterBluePlus.onScanResults.listen((results) {
     //   print('results');
     //   print(results.length);
     //   devices.value = results;
-    //   devices.notifyListeners();
     // });
-
-    // await FlutterBluePlus.startScan(timeout: Duration(seconds: 20)).whenComplete(() {});
-
-    // print('devices.value.length');
+    // devices.notifyListeners();
     // print(devices.value.length);
 
-    // await Future.delayed(Duration(seconds: 5));
-    // FlutterBluePlus.stopScan();
+    await FlutterBluePlus.startScan(timeout: Duration(seconds: 20));
 
+    // Stream para capturar os dispositivos encontrados
+    final subscription = FlutterBluePlus.onScanResults.listen((results) {
+      if (results.isNotEmpty) {
+        devices.value = results;
+        devices.notifyListeners();
+        print("Dispositivos encontrados: ${devices.value.length}");
+      }
+    });
+
+    print('devices.value.length');
+    print(devices.value.length);
+
+    await Future.delayed(Duration(seconds: 5));
+    await FlutterBluePlus.stopScan();
+    // FlutterBluePlus.cancelWhenScanComplete(subscription);
+    await subscription.cancel();
     isScanning.value = false;
     notifyListeners();
   }
