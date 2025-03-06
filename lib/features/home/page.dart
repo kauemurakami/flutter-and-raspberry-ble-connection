@@ -51,7 +51,12 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Center(child: Text('home')),
+            Center(
+              child: ValueListenableBuilder(
+                valueListenable: provider.temperature,
+                builder: (context, value, child) => Text(value),
+              ),
+            ),
           ],
         ),
       ),

@@ -12,58 +12,52 @@ class HomeProvider extends ChangeNotifier {
   readTemperature() {}
 
   connectDevice(BluetoothDevice device) async {
-    BluetoothCharacteristic? targetCharacteristic;
-
     await device.connect();
 
     // Note: You must call discoverServices after every re-connection!
     List<BluetoothService> services = await device.discoverServices();
+    BluetoothService service = services.firstWhere((BluetoothService s) {
+      print('service');
+      print(s.uuid);
+      print(Guid(BluetoothUUIDs.serviceUUID));
+      print('/service');
 
-    for (BluetoothService service in services) {
-      if (service.uuid.toString().toLowerCase() == BluetoothUUIDs.serviceUUID) {
-        print("Serviço encontrado: ${service.uuid}");
+      return s.uuid == Guid(BluetoothUUIDs.serviceUUID);
+    });
 
-        for (BluetoothCharacteristic c in service.characteristics) {
-          if (c.uuid.toString().toLowerCase() == BluetoothUUIDs.characteristicUUID) {
-            print("Característica encontrada: ${c.uuid}");
-            targetCharacteristic = c; // Armazena a characteristic na variável
-            break;
-          }
-        }
-        if (targetCharacteristic != null) {
-          break; // Sai do loop de serviços também
-        }
+    BluetoothCharacteristic characteristic = service.characteristics.firstWhere((c) {
+      print('characteristic');
+      print(c.uuid);
+      print(Guid(BluetoothUUIDs.characteristicUUID));
+      print('/characteristic');
+
+      return c.uuid == Guid(BluetoothUUIDs.characteristicUUID);
+    });
+    // var v = await characteristic.read();
+    // print(String.fromCharCodes(v));
+    await characteristic.setNotifyValue(true);
+
+    List<int> v = await characteristic.read();
+    print(String.fromCharCodes(v));
+
+    characteristic.onValueReceived.listen((value) {
+      if (value.isNotEmpty) {
+        String tempString = String.fromCharCodes(value); // Converte para String
+        print("Temperatura recebida: $tempString");
+
+        // Atualiza a variável `temperature`
+        temperature.value = tempString;
+        notifyListeners();
       }
+    });
 
-      // final subscription = targetCharacteristic!.onValueReceived.listen((value) async {
-      //   List<int> value = await targetCharacteristic!.read();
-      //   print("Valor inicial: ${String.fromCharCodes(value)}");
-      //   temperature.value = String.fromCharCodes(value);
-      //   notifyListeners();
-      // });
-
-      // device.cancelWhenDisconnected(subscription);
-
-      // await targetCharacteristic.setNotifyValue(true);
-
-      // List<BluetoothService> services = await device.discoverServices();
-      // for (BluetoothService service in services) {
-      //   print('service');
-      //   print(service.serviceUuid);
-      //   print(service.uuid);
-      //   print('/service');
-
-      //   // do something with service
-      //   var characteristics = service.characteristics;
-      //   for (BluetoothCharacteristic c in characteristics) {
-      //     // print(c.characteristicUuid);
-
-      //     if (c.properties.read) {
-      //       List<int> value = await c.read();
-      //       print(String.fromCharCodes(value));
-      //     }
-      //   }
-    }
+    // final subscription = characteristic.onValueReceived.listen((value) async {
+    //   List<int> value = await characteristic.read();
+    //   print("Valor inicial: ${String.fromCharCodes(value)}");
+    //   temperature.value = String.fromCharCodes(value);
+    //   notifyListeners();
+    // });
+    // device.cancelWhenDisconnected(subscription);
   }
 
   changeAdapterState(BluetoothAdapterState state) {
