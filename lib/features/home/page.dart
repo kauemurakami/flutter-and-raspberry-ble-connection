@@ -30,8 +30,17 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: ValueListenableBuilder(
         valueListenable: provider.adapterState,
         builder: (context, state, child) => FloatingActionButton(
-          onPressed: () async =>
-              state == BluetoothAdapterState.on ? await Navigator.pushNamed(context, AppRoutes.connect) : null,
+          onPressed: () async {
+            BluetoothDevice? device;
+            if (state == BluetoothAdapterState.on) {
+              device = await Navigator.pushNamed(context, AppRoutes.connect) as BluetoothDevice;
+            }
+            if (device == null) {
+              print('nenhum device retornou de connectpage');
+            } else {
+              await provider.connectDevice(device);
+            }
+          },
           child: Icon(
             Icons.bluetooth,
           ),

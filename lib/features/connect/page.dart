@@ -1,4 +1,7 @@
 import 'package:app_ble/features/connect/provider.dart';
+import 'package:app_ble/features/connect/widgets/device_item.dart';
+import 'package:app_ble/features/connect/widgets/not_found_devices.dart';
+import 'package:app_ble/widgets/linear_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,12 +20,6 @@ class _ConnectPageState extends State<ConnectPage> {
     super.initState();
 
     provider = Provider.of<ConnectProvider>(context, listen: false);
-  }
-
-  @override
-  void dispose() {
-    provider.dispose();
-    super.dispose();
   }
 
   @override
@@ -48,29 +45,16 @@ class _ConnectPageState extends State<ConnectPage> {
                 child: ValueListenableBuilder(
                   valueListenable: provider.isScanning,
                   builder: (context, bool load, child) => load
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Center(
-                              child: LinearProgressIndicator(),
-                            ),
-                          ],
-                        )
+                      ? LoadingWidget()
                       : ValueListenableBuilder(
                           valueListenable: provider.devices,
                           builder: (context, devices, child) => devices.isEmpty
-                              ? Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Center(
-                                      child: Text('Nenhum dispositivo encontrado'),
-                                    )
-                                  ],
-                                )
+                              ? NotFoundDevicesWidget()
                               : ListView.builder(
                                   itemCount: devices.length,
-                                  itemBuilder: (context, index) => Text('data $index'),
+                                  itemBuilder: (context, index) => DeviceItemWidget(
+                                    device: devices[index],
+                                  ),
                                 ),
                         ),
                 ),

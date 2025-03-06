@@ -12,14 +12,6 @@ class ConnectProvider extends ChangeNotifier {
     devices.notifyListeners();
     notifyListeners();
 
-    // var subscription = FlutterBluePlus.onScanResults.listen((results) {
-    //   print('results');
-    //   print(results.length);
-    //   devices.value = results;
-    // });
-    // devices.notifyListeners();
-    // print(devices.value.length);
-
     await FlutterBluePlus.startScan(timeout: Duration(seconds: 20));
 
     // Stream para capturar os dispositivos encontrados
@@ -30,9 +22,6 @@ class ConnectProvider extends ChangeNotifier {
         print("Dispositivos encontrados: ${devices.value.length}");
       }
     });
-
-    print('devices.value.length');
-    print(devices.value.length);
 
     await Future.delayed(Duration(seconds: 5));
     await FlutterBluePlus.stopScan();
