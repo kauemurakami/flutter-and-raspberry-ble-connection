@@ -9,7 +9,8 @@ class HomeProvider extends ChangeNotifier {
   ValueNotifier<BluetoothAdapterState> adapterState = ValueNotifier(BluetoothAdapterState.unknown);
   late StreamSubscription<BluetoothAdapterState> adapterStateStateSubscription;
   late StreamSubscription characteristicSubscription;
-
+  // late Stream<List<int>> streamCharacteristic;
+  // ValueNotifier<bool> initializeCStream = ValueNotifier(true);
   readTemperature() {}
 
   connectDevice(BluetoothDevice device) async {

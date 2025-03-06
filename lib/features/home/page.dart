@@ -56,7 +56,7 @@ class _HomePageState extends State<HomePage> {
             Center(
               child: ValueListenableBuilder(
                 valueListenable: provider.temperature,
-                builder: (context, value, child) => Text(value),
+                builder: (context, value, child) => Text('$value°C'),
               ),
             ),
           ],
