@@ -34,6 +34,8 @@ class _HomePageState extends State<HomePage> {
             BluetoothDevice? device;
             if (state == BluetoothAdapterState.on) {
               device = await Navigator.pushNamed(context, AppRoutes.connect) as BluetoothDevice;
+            } else {
+              FlutterBluePlus.turnOn();
             }
             if (device == null) {
               print('nenhum device retornou de connectpage');
